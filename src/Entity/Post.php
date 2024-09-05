@@ -21,7 +21,7 @@ class Post
     #[ORM\Column]
     private ?string $post_text = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'integer')]
     private ?int $post_date = null;
 
     #[ORM\Column(length: 255)]
@@ -31,7 +31,7 @@ class Post
     private ?int $author_id = null;
 
     #[ORM\Column]
-    private ?int $view_count = null;
+    private ?int $view_count = 0;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'posts')]
     #[ORM\JoinColumn(name: 'author_id', referencedColumnName: 'id', nullable: false)]
@@ -83,9 +83,9 @@ class Post
         return $this->post_date;
     }
 
-    public function setPostDate(int $post_date): static
+    public function setPostDate(): static
     {
-        $this->post_date = $post_date;
+        $this->post_date = time();
 
         return $this;
     }
