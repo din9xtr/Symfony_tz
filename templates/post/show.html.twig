@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ post.title }}
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<h1>{{ post.title }}</h1>
+		<p>{{ post.postText }}</p>
+		<p>
+			<small>{{post.author}}</p>
+		</p>
+	</small>
+	<p>
+		<small>Posted on
+			{{ post.postDate | date('Y-m-d') }}</small>
+	</p>
+	<a href="{{ path('post_list') }}" class="btn btn-dark">Back to list</a>
+</div>{% endblock %}
+

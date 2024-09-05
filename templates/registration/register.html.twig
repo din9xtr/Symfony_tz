@@ -13,37 +13,38 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div class="container mt-5">
-        <h1 class="mb-4">Register</h1>
+	<div class="container mt-5">
+		<h1 class="mb-4">Register</h1>
 
-        {{ form_start(registrationForm, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+		{{ form_start(registrationForm, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
 
-        <div class="mb-3">
-            {{ form_label(registrationForm.login, null, {'label_attr': {'class': 'form-label'}}) }}
-            {{ form_widget(registrationForm.login, {'attr': {'class': 'form-control'}}) }}
-            {{ form_errors(registrationForm.login) }}
-        </div>
+		<div class="mb-3">
+			{{ form_label(registrationForm.login, null, {'label_attr': {'class': 'form-label'}}) }}
+			{{ form_widget(registrationForm.login, {'attr': {'class': 'form-control'}}) }}
+			{{ form_errors(registrationForm.login) }}
+		</div>
 
-        <div class="mb-3">
-            {{ form_label(registrationForm.email, null, {'label_attr': {'class': 'form-label'}}) }}
-            {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control'}}) }}
-            {{ form_errors(registrationForm.email) }}
-        </div>
+		<div class="mb-3">
+			{{ form_label(registrationForm.email, null, {'label_attr': {'class': 'form-label'}}) }}
+			{{ form_widget(registrationForm.email, {'attr': {'class': 'form-control'}}) }}
+			{{ form_errors(registrationForm.email) }}
+		</div>
 
-        <div class="mb-3">
-            {{ form_label(registrationForm.password, null, {'label_attr': {'class': 'form-label'}}) }}
-            {{ form_widget(registrationForm.password, {'attr': {'class': 'form-control'}}) }}
-            {{ form_errors(registrationForm.password) }}
-        </div>
-        
-        <div class="mb-3">
-            {{ form_label(registrationForm.role, null, {'label_attr': {'class': 'form-label'}}) }}
-            {{ form_widget(registrationForm.role, {'attr': {'class': 'form-select  mb-3'}}) }}
-            {{ form_errors(registrationForm.role) }}
-        </div>
+		<div class="mb-3">
+			{{ form_label(registrationForm.password, null, {'label_attr': {'class': 'form-label'}}) }}
+			{{ form_widget(registrationForm.password, {'attr': {'class': 'form-control'}}) }}
+			{{ form_errors(registrationForm.password) }}
+		</div>
 
-        <button type="submit" class="btn btn-primary mb-3">Register</button>
+		<div class="mb-3">
+			{{ form_label(registrationForm.role, null, {'label_attr': {'class': 'form-label'}}) }}
+			{{ form_widget(registrationForm.role, {'attr': {'class': 'form-select  mb-3'}}) }}
+			{{ form_errors(registrationForm.role) }}
+		</div>
 
-        {{ form_end(registrationForm) }}
-    </div>
+		<button type="submit" class="btn btn-primary mb-3">Register</button>
+
+		{{ form_end(registrationForm) }}
+	</div>
 {% endblock %}
+

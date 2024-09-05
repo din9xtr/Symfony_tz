@@ -6,6 +6,8 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: "users")]
@@ -29,7 +31,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length: 255, unique: true)]
     private string $email;
     private array $roles = [];
- 
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Post::class)]
+    private Collection $posts;
+
+    public function __construct()
+    {
+        $this->posts = new ArrayCollection();
+    }
+
+    public function getPosts(): Collection
+    {
+        return $this->posts;
+    }
     public function getId(): ?int
     {
         return $this->id;
@@ -74,14 +88,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function eraseCredentials():void
+    public function eraseCredentials(): void
     {
-       
+
     }
 
     public function getUserIdentifier(): string
     {
-        return $this->login; 
+        return $this->login;
 
     }
 
