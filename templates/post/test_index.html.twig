@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Post List
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<h1>Post List</h1>
+		<div class="list-group">
+			{% for post in posts %}
+				<a href="{{ path('post_show', { 'id': post.id }) }}" class="list-group-item list-group-item-action">
+					<h5 class="mb-1">{{ post.title }}</h5>
+					<p class="mb-1">{{ post.postText | slice(0, 100) ~ '...' }}</p>
+					<small>Posted on
+						{{ post.postDate | date('Y-m-d') }}</small>
+					<small>Views:
+						{{post.viewCount}}</small>
+				</a>
+			{% else %}
+				<p>No posts available.</p>
+			{% endfor %}
+		</div>
+	</div>
+{% endblock %}
+

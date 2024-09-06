@@ -1,25 +1,47 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Post List
-{% endblock %}
-
 {% block body %}
 	<div class="container">
-		<h1>Post List</h1>
-		<div class="list-group">
-			{% for post in posts %}
-				<a href="{{ path('post_show', { 'id': post.id }) }}" class="list-group-item list-group-item-action">
-					<h5 class="mb-1">{{ post.title }}</h5>
-					<p class="mb-1">{{ post.postText | slice(0, 100) ~ '...' }}</p>
-					<small>Posted on
-						{{ post.postDate | date('Y-m-d') }}</small>
-					<small>Views:
-						{{post.viewCount}}</small>
-				</a>
-			{% else %}
-				<p>No posts available.</p>
-			{% endfor %}
+
+		<div class="btn-group mb-3 " role="group" aria-label="Sort Options">
+			<a href="{{ path('post_list', { sort: 'latest', page: 1 }) }}" class="btn btn-dark mt-2 me-2 {% if sort == 'latest' %}active{% endif %}">Latest</a>
+			<a href="{{ path('post_list', { sort: 'popular', page: 1 }) }}" class="btn btn-dark mt-2  {% if sort == 'popular' %}active{% endif %}">Popular</a>
 		</div>
+
+		<div id="posts">
+			{% include 'post/_posts.html.twig' %}
+		</div>
+
+		<nav aria-label="Page navigation">
+			<ul class="pagination">
+				{% if current_page > 1 %}
+					<li class="page-item">
+						<a class="btn btn-dark me-2" href="{{ path('post_list', { page: current_page - 1, sort: sort }) }}" aria-label="Previous">
+							<span aria-hidden="true">&laquo;</span>
+						</a>
+					</li>
+				{% endif %}
+
+				{% for page in 1..total_pages %}
+					<li class="page-item {% if page == current_page %}active{% endif %}">
+						<a class="btn btn-dark me-2" href="{{ path('post_list', { page: page, sort: sort }) }}">{{ page }}</a>
+					</li>
+				{% endfor %}
+
+				{% if current_page < total_pages %}
+					<li class="page-item">
+						<a class="btn btn-dark me-2" href="{{ path('post_list', { page: current_page + 1, sort: sort }) }}" aria-label="Next">
+							<span aria-hidden="true">&raquo;</span>
+						</a>
+					</li>
+				{% endif %}
+			</ul>
+		</nav>
+
+		{% if current_page < total_pages %}
+			<button id="loadMore" data-page="{{ current_page + 1 }}" data-sort="{{ sort }}" class="btn btn-dark">Load More</button>
+		{% endif %}
 	</div>
+	<script src="{{ asset('js/loadmore.js') }}"></script>
 {% endblock %}
 

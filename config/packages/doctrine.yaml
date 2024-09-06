@@ -41,6 +41,13 @@ when@prod:
             result_cache_driver:
                 type: pool
                 pool: doctrine.result_cache_pool
+        dbal:
+            default_connection: default
+            connections:
+                default:
+                    url: '%env(DATABASE_URL)%'
+                alternative:
+                    url: '%env(ALT_DATABASE_URL)%'
 
     framework:
         cache:
