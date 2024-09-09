@@ -1,0 +1,49 @@
+body {
+    background-color: rgb(92, 160, 101);
+    color: #fff;
+}
+
+#chat-box {
+    list-style-type: none;
+    margin: 0;
+    padding: 10px;
+    height: 700px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: rgb(30, 30, 30);
+    border-radius: 8px;
+    border: 1px solid #444;
+}
+
+#chat-box li {
+    padding: 10px;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+#chat-box li:hover {
+    background-color: rgb(72, 128, 80);
+    transform: scale(1.02);
+}
+
+#chat-box strong {
+    color: rgb(255, 80, 80);
+}
+
+#chat-form {
+    display: flex;
+    margin-top: 10px;
+}
+
+#chat-form input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #555;
+    border-radius: 4px;
+    color: #fff;
+    background-color: rgb(30, 30, 30);
+}
+
+#chat-form button {
+    padding: 10px 20px;
+    margin-left: 10px;
+}
