@@ -3,10 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Comment;
+use App\Entity\Favorite;
 use App\Entity\Post;
 use App\Form\PostType;
 use App\Form\CommentType;
 use App\Repository\PostRepository;
+use App\Repository\FavoriteRepository;
 use App\Enum\Status;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -61,7 +63,7 @@ class PostController extends AbstractController
         ]);
     }
     #[Route('/post/{id}', name: 'post_show')]
-    public function show(Post $post, Request $request, EntityManagerInterface $entityManager,PostRepository $postRepository): Response
+    public function show(Post $post, Request $request, EntityManagerInterface $entityManager,PostRepository $postRepository,  FavoriteRepository $favoriteRepository): Response
     {
         /// ip check
         $ip = $request->getClientIp();
@@ -98,8 +100,14 @@ class PostController extends AbstractController
                 return $comment->getStatus() === Status::approved->value;
             });
         }
+        if ($this->getUser() != null){
+            $favorites = new Favorite();
+            $user = $this->getUser();
+            $favorites = $favoriteRepository->isFavorite($user->getId(), $post->getId());
+        } else $favorites = null;
+        
         return $this->render('post/show.html.twig', [
-
+            'favorites'=>$favorites,
             'post' => $post,
             'form' => $form->createView(),
             'comments' => $comments,

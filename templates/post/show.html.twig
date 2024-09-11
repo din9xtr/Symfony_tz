@@ -15,6 +15,7 @@
 			<small>Posted on
 				{{ post.postdate | date('Y-m-d') }}</small>
 		</p>
+
 		{% if is_granted('ROLE_ADMIN')  or  (is_granted('ROLE_EDITOR') and app.user == post.author)%}
 			<a href="{{ path('post_edit', { 'id': post.id }) }}" class="btn btn-dark mt-2">Edit post</a>
 		{% endif %}
@@ -40,22 +41,45 @@
 				<li>No comments yet.</li>
 			{% endfor %}
 		</ul>
+		{% if app.user != null %}
+			<h3>Leave a Comment</h3>
 
-		<h3>Leave a Comment</h3>
+			<h6>Description: comments wait for admin approved</h6>
 
-		<h6>Description: comments wait for admin approved</h6>
+			{{ form_start(form) }}
+			{{ form_row(form.text) }}
+			{% if is_granted('ROLE_ADMIN') %}
+				{{ form_row(form.status) }}
+			{% endif %}
+			<input type="hidden" id="comment_id" name="comment_id" value="{{ editingCommentId ? editingCommentId : '' }}">
+			<button type="submit" class="btn btn-dark mt-1">{{ editingCommentId ? 'Update Comment' : 'Add Comment' }}</button>
+			{{ form_end(form) }}
+			
+			{% if favorites %}
+				<form id="removefavorite" action="{{ path('favorite_remove') }}" method="post">
+					<input type="hidden" name="post_id" value="{{ post.id }}">
+					<input type="hidden" name="user_id" value="{{ app.user.id }}">
+					<input type="hidden" name="_token" value="{{ csrf_token('remove') }}">
 
-		{{ form_start(form) }}
-		{{ form_row(form.text) }}
-		{% if is_granted('ROLE_ADMIN') %}
-			{{ form_row(form.status) }}
+					<button id="removefavoriteButton" class="btn btn-outline-warning mt-3">Remove from Favorites</button>
+				</form>
+			{% else %}
+				<form id="addfavorite" action="{{ path('favorite_add') }}" method="POST">
+					<input type="hidden" name="post_id" value="{{ post.id }}">
+					<input type="hidden" name="user_id" value="{{ app.user.id }}">
+					<input type="hidden" name="_token" value="{{ csrf_token('add') }}">
+
+					<button id="addfavoriteButton" class="btn btn-outline-warning mt-3">Add to Favorites</button>
+				</form>
+			{% endif %}
+		{% else %}
+			<h3>For comment this please sign in</h3>
+
 		{% endif %}
-		<input type="hidden" id="comment_id" name="comment_id" value="{{ editingCommentId ? editingCommentId : '' }}">
-		<button type="submit" class="btn btn-dark mt-1">{{ editingCommentId ? 'Update Comment' : 'Add Comment' }}</button>
-		{{ form_end(form) }}
-
 		<a href="{{ path('post_list') }}" class="btn btn-dark mt-2">Back to list</a>
 	</div>
 
 	<script src="{{ asset('js/comment_edit.js') }}"></script>
+
 {% endblock %}
+

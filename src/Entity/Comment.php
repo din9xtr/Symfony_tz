@@ -30,9 +30,14 @@ class Comment
 
     #[ORM\Column(length: 255)]
     private ?string $status = null;
+
     #[ORM\ManyToOne(targetEntity: Post::class, inversedBy: 'comments')]
     #[ORM\JoinColumn(name: 'post_id', referencedColumnName: 'id', nullable: false)]
     private ?Post $post = null;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'comments')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false)]
+    private ?User $user = null;
 
     public function getPost(): ?Post
     {
@@ -45,11 +50,6 @@ class Comment
         $this->post_id = $post->getId();
         return $this;
     }
-
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'comments')]
-    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false)]
-    private ?User $user = null;
-
     public function getUser(): ?User
     {
         return $this->user;
