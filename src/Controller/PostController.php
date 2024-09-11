@@ -61,16 +61,22 @@ class PostController extends AbstractController
         ]);
     }
     #[Route('/post/{id}', name: 'post_show')]
-    public function show(Post $post, Request $request, EntityManagerInterface $entityManager): Response
+    public function show(Post $post, Request $request, EntityManagerInterface $entityManager,PostRepository $postRepository): Response
     {
+        /// ip check
+        $ip = $request->getClientIp();
+        $postRepository->incrementViewCount($ip, $post->getId());
+
+        //cooment edit
         $comment_id = $request->request->get('comment_id');
         if ($comment_id) {
             $comment = $entityManager->getRepository(Comment::class)->find($comment_id);
         } else {
-
+            
             $comment = new Comment();
             $comment->setPost($post);
         }
+        
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
 
