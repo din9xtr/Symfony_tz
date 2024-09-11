@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\PostRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 #[ORM\Table(name: "posts")]
@@ -32,6 +34,14 @@ class Post
 
     #[ORM\Column]
     private ?int $view_count = 0;
+
+    #[ORM\OneToMany(mappedBy: 'post', targetEntity: Comment::class, orphanRemoval: true)]
+    private Collection $comments;
+
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'posts')]
     #[ORM\JoinColumn(name: 'author_id', referencedColumnName: 'id', nullable: false)]

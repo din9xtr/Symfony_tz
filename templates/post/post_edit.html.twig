@@ -1,18 +1,22 @@
-{# templates/post/create.html.twig #}
-
 {% extends 'base.html.twig' %}
 
-{% block title %}Create Post
+{% block title %}Edit Post
 {% endblock %}
 
 {% block body %}
 	<link rel="stylesheet" href="{{ asset('styles/post_create_edit.css') }}">
-	<h1>Create Post</h1>
+	<h1>Edit Post
+		{{post.id}}
+	</h1>
 
 	{{ form_start(form) }}
 	{{ form_row(form.title) }}
 	{{ form_row(form.post_text) }}
-	<button type="submit" class="btn btn-dark">Save</button>
+
+	<button type="submit" class="btn btn-dark  ">Edit</button>
+
 	{{ form_end(form) }}
+
+	{{ include('post/_delete_form.html.twig') }}
 
 {% endblock %}

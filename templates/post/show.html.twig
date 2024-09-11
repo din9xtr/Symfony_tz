@@ -5,17 +5,57 @@
 {% endblock %}
 
 {% block body %}
-	<div class="container">
+	<div class="container mt-5">
 		<h1>{{ post.title }}</h1>
-		<p>{{ post.postText }}</p>
+		<p>{{ post.posttext }}</p>
 		<p>
-			<small>{{post.author}}</p>
+			<small>{{ post.author }}</small>
 		</p>
-	</small>
-	<p>
-		<small>Posted on
-			{{ post.postDate | date('Y-m-d') }}</small>
-	</p>
-	<a href="{{ path('post_list') }}" class="btn btn-dark">Back to list</a>
-</div>{% endblock %}
+		<p>
+			<small>Posted on
+				{{ post.postdate | date('Y-m-d') }}</small>
+		</p>
+		{% if is_granted('ROLE_ADMIN')  or  (is_granted('ROLE_EDITOR') and app.user == post.author)%}
+			<a href="{{ path('post_edit', { 'id': post.id }) }}" class="btn btn-dark mt-2">Edit post</a>
+		{% endif %}
 
+
+		<h4 class="text-body mb-0">Comments ({{ comments|length }})</h4>
+		<ul>
+			{% for comment in comments %}
+				<li>
+					<strong>{{ comment.user.login }}</strong>
+					said:
+					{{ comment.text }}
+					<br><small>Posted on
+						{{ comment.commentdate | date('Y-m-d H:i') }}</small>
+
+					{% if is_granted('ROLE_ADMIN') %}
+						Status:
+						{{ comment.status }}
+						<a href="javascript:void(0);" class="btn btn-dark" onclick="editComment({{ comment.id }}, '{{ comment.text|e('js') }}', '{{ comment.status|e('js') }}')">Edit</a>
+					{% endif %}
+				</li>
+			{% else %}
+				<li>No comments yet.</li>
+			{% endfor %}
+		</ul>
+
+		<h3>Leave a Comment</h3>
+
+		<h6>Description: comments wait for admin approved</h6>
+
+		{{ form_start(form) }}
+		{{ form_row(form.text) }}
+		{% if is_granted('ROLE_ADMIN') %}
+			{{ form_row(form.status) }}
+		{% endif %}
+		<input type="hidden" id="comment_id" name="comment_id" value="{{ editingCommentId ? editingCommentId : '' }}">
+		<button type="submit" class="btn btn-dark mt-1">{{ editingCommentId ? 'Update Comment' : 'Add Comment' }}</button>
+		{{ form_end(form) }}
+
+		<a href="{{ path('post_list') }}" class="btn btn-dark mt-2">Back to list</a>
+	</div>
+
+	<script src="{{ asset('js/comment_edit.js') }}"></script>
+{% endblock %}

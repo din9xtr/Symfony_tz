@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-	<div class="container">
+	<div class="container mt-5">
 
 		<div class="btn-group mb-3 " role="group" aria-label="Sort Options">
 			<a href="{{ path('post_list', { sort: 'latest', page: 1 }) }}" class="btn btn-dark mt-2 me-2 {% if sort == 'latest' %}active{% endif %}">Latest</a>
@@ -44,4 +44,3 @@
 	</div>
 	<script src="{{ asset('js/loadmore.js') }}"></script>
 {% endblock %}
-

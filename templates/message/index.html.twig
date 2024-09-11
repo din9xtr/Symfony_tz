@@ -2,10 +2,9 @@
 
 {% block title %}Chat
 {% endblock %}
-{% block stylesheets %}<link rel="stylesheet" href="{{ asset('styles/chat.css') }}">
-{% endblock %}
-{% block body %}
 
+{% block body %}
+	<link rel="stylesheet" href="{{ asset('styles/chat.css') }}">
 	<div class="container mt-4">
 		<ul id="chat-box">
 			{% for message in recentMessages %}
@@ -27,4 +26,3 @@
 	<script src="{{ asset('js/chat.js') }}"></script>
 
 {% endblock %}
-
