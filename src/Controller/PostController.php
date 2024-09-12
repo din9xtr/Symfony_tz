@@ -10,6 +10,7 @@ use App\Form\CommentType;
 use App\Repository\PostRepository;
 use App\Repository\FavoriteRepository;
 use App\Enum\Status;
+use App\Service\MailService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -18,6 +19,11 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class PostController extends AbstractController
 {
+    private MailService $mailService;
+    public function __construct(MailService $mailService)
+    {
+        $this->mailService = $mailService;
+    }
     #[Route('/', name: 'post_list', methods: ['GET'])]
     public function index(PostRepository $postRepository, Request $request): Response
     {
@@ -78,33 +84,44 @@ class PostController extends AbstractController
             $comment = new Comment();
             $comment->setPost($post);
         }
-        
+        // comment form
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
 
-
+        // comment form sub
         if ($form->isSubmitted() && $form->isValid()) {
             if (!$comment_id) {
                 $comment->setCommentDate(time());
                 $comment->setUser($this->getUser());
                 $comment->setStatus(Status::pending->value);
             }
+            // if comment approved send emails to users who fav this post
+            if ($comment->getStatus() == Status::approved->value)
+            {
+                $emails = $favoriteRepository->getEmailsByPostId($post->getId());
+
+               
+                $this->mailService->sendEmailsToUsers($emails, $post->getTitle(), $comment->getText());
+            }
 
             $entityManager->persist($comment);
             $entityManager->flush();
         }
-
+        // comments for post if admin comments with all status get
         $comments = $post->getComments();
         if (!$this->isGranted('ROLE_ADMIN')) {
             $comments = $comments->filter(function ($comment) {
                 return $comment->getStatus() === Status::approved->value;
             });
         }
+        // favorite check for fav buttons
         if ($this->getUser() != null){
             $favorites = new Favorite();
             $user = $this->getUser();
             $favorites = $favoriteRepository->isFavorite($user->getId(), $post->getId());
-        } else $favorites = null;
+        } else 
+        // if post isn`t fav or user isn`t auth
+        $favorites = null;
         
         return $this->render('post/show.html.twig', [
             'favorites'=>$favorites,

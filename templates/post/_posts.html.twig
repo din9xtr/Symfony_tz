@@ -12,7 +12,13 @@
 							<br>
 							<small class=" text-white">Views:
 								{{ post.viewCount }}</small>
-								<small class=" text-white">Commets: {{ post.comments|length }} </small>
+							<small class="text-white">
+								Comments:
+								{{ post.comments | filter(c => c.status == 'approved') | length }}
+								/
+								{{ post.comments | length }}
+							</small>
+
 						</p>
 					</a>
 				</div>
