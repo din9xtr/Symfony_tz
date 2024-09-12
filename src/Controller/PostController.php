@@ -69,7 +69,7 @@ class PostController extends AbstractController
         ]);
     }
     #[Route('/post/{id}', name: 'post_show')]
-    public function show(Post $post, Request $request, EntityManagerInterface $entityManager,PostRepository $postRepository,  FavoriteRepository $favoriteRepository): Response
+    public function show(Post $post, Request $request, EntityManagerInterface $entityManager, PostRepository $postRepository, FavoriteRepository $favoriteRepository): Response
     {
         /// ip check
         $ip = $request->getClientIp();
@@ -80,7 +80,7 @@ class PostController extends AbstractController
         if ($comment_id) {
             $comment = $entityManager->getRepository(Comment::class)->find($comment_id);
         } else {
-            
+
             $comment = new Comment();
             $comment->setPost($post);
         }
@@ -96,11 +96,10 @@ class PostController extends AbstractController
                 $comment->setStatus(Status::pending->value);
             }
             // if comment approved send emails to users who fav this post
-            if ($comment->getStatus() == Status::approved->value)
-            {
+            if ($comment->getStatus() == Status::approved->value) {
                 $emails = $favoriteRepository->getEmailsByPostId($post->getId());
 
-               
+
                 $this->mailService->sendEmailsToUsers($emails, $post->getTitle(), $comment->getText());
             }
 
@@ -115,16 +114,17 @@ class PostController extends AbstractController
             });
         }
         // favorite check for fav buttons
-        if ($this->getUser() != null){
+        if ($this->getUser() != null) {
             $favorites = new Favorite();
             $user = $this->getUser();
             $favorites = $favoriteRepository->isFavorite($user->getId(), $post->getId());
-        } else 
-        // if post isn`t fav or user isn`t auth
-        $favorites = null;
-        
+        } else {
+            // if post isn`t fav or user isn`t auth
+            $favorites = null;
+        }
+
         return $this->render('post/show.html.twig', [
-            'favorites'=>$favorites,
+            'favorites' => $favorites,
             'post' => $post,
             'form' => $form->createView(),
             'comments' => $comments,

@@ -72,6 +72,16 @@ class PostRepository extends ServiceEntityRepository
         return false;
     }
     
+    public function getFavorites ( int $id):array{
+
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = 'SELECT * FROM posts WHERE posts.id IN(SELECT favorite_posts.post_id from favorite_posts WHERE favorite_posts.user_id=:user_id)';
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue('user_id', $id, \PDO::PARAM_INT);
+        return $stmt->executeQuery()->fetchAllAssociative();
+
+    }
 
     //    /**
     //     * @return Post[] Returns an array of Post objects

@@ -34,7 +34,6 @@ class MessageRepository extends ServiceEntityRepository
         return $resultSet->fetchAllAssociative();
         }
 
-
     //    /**
     //     * @return Message[] Returns an array of Message objects
     //     */
